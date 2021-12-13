@@ -1,0 +1,12 @@
+{
+  "name": "@cristianodmtsb/upward-gp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/cristianodmtsb/upward-gp.git",
+  "author": "cristianodmtsb",
+  "license": "MIT",
+  "files": [
+    "upward/*",
+    "upward/**/*"
+  ]
+}

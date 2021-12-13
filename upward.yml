@@ -1,0 +1,150 @@
+
+###########################################################
+#                                                         #
+#                    CONDITIONAL RENDER                   #
+#                                                         #
+###########################################################
+
+veniaAppShell:
+  resolver: inline
+  inline:
+    status:
+      resolver: inline
+      inline: 200
+    headers:
+      resolver: inline
+      inline:
+        content-type:
+          inline: text/html
+    body:
+      resolver: conditional
+      when:
+        - matches: urlResolver.type
+          pattern: 'CMS_PAGE'
+          use: cmsShell
+        - matches: urlResolver.type
+          pattern: 'PRODUCT'
+          use: productShell
+        - matches: urlResolver.type
+          pattern: 'CATEGORY'
+          use: categoryShell
+      default: defaultTemplate
+
+###########################################################
+#                                                         #
+#                          PAGES                          #
+#                                                         #
+###########################################################
+
+defaultTemplate:
+  resolver: file
+  file:
+    resolver: inline
+    inline: './index.html'
+
+##### CMS PAGE #####
+cmsShell:
+  resolver: template
+  engine: mustache
+  template: './custom-templates/pages/cms-shell.mst'
+  provide:
+    urlResolver: urlResolver
+    env: env
+    assets: assetManifest
+    cmsPage: cmsPage
+    title: cmsPage.title
+    meta_title: cmsPage.meta_title
+    meta_keywords: cmsPage.meta_keywords
+    meta_description: cmsPage.meta_description
+
+cmsPage: cmsPageResult.data.cmsPage
+cmsPageResult:
+  resolver: service
+  endpoint: magentoGQL
+  query: './upward/queries/getCMSContent.graphql'
+  variables:
+    inline:
+      id: urlResolver.id
+      onServer: true
+
+##### PRODUCT #####
+productShell:
+  resolver: template
+  engine: mustache
+  template: './custom-templates/pages/product-shell.mst'
+  provide:
+    urlResolver: urlResolver
+    env: env
+    assets: assetManifest
+    product: product
+    title: product.name
+    meta_title: product.meta_title
+    meta_keywords: product.meta_keywords
+    meta_description: product.meta_description
+
+product: productResult.data.products.items.0
+productResult:
+  resolver: service
+  endpoint: magentoGQL
+  query: './upward/queries/getProductContent.graphql'
+  variables:
+    inline:
+      onServer: true
+      urlKey: veniaUrlKey
+
+##### CATEGORY #####
+categoryShell:
+  resolver: template
+  engine: mustache
+  template: './custom-templates/pages/category-shell.mst'
+  provide:
+    urlResolver: urlResolver
+    env: env
+    assets: assetManifest
+    category: category
+
+category: categoryResult.data.category
+categoryResult:
+  resolver: service
+  endpoint: magentoGQL
+  query: './upward/queries/getCategoryContent.graphql'
+  variables:
+    inline:
+      id: urlResolver.id
+
+###########################################################
+#                                                         #
+#                         HELPERS                         #
+#                                                         #
+###########################################################
+
+urlResolver: urlResolverResult.data.urlResolver
+
+urlResolverResult:
+  resolver: service
+  endpoint: magentoGQL
+  query: './upward/queries/getUrlType.graphql'
+  variables:
+    inline:
+      url: request.url.pathname
+
+assetManifest: ./asset-manifest.json
+
+veniaTemplateIncludes:
+  resolver: directory
+  directory:
+    resolver: inline
+    inline: './custom-templates'
+
+magentoGQL:
+  baseUrl: env.MAGENTO_BACKEND_URL
+  pathname:
+    inline: graphql
+
+veniaUrlKey:
+  when:
+    - matches: request.url.pathname
+      pattern: '^\/(.+?)(?:\.html)?$'
+      use: $match.$1
+  default:
+    inline: ''

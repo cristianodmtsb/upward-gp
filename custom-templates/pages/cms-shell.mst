@@ -1,0 +1,21 @@
+{{> custom-templates/default/open-document}}
+    <meta name="robots" content="INDEX,FOLLOW"/>
+
+    {{#cmsPage}}
+
+    <meta name="title" content="{{ meta_title }}"/>
+    <meta name="keywords" content="{{ meta_keywords }}"/>
+    <meta name="description" content="{{ meta_description }}"/>
+
+    <meta property="og:title" content="{{ name }}" />
+    <meta property="og:image" content="{{ image.url }}" />
+
+    {{/cmsPage}}
+
+{{> templates/open-body}}
+
+    {{> templates/default-initial-contents }}
+    {{> templates/seed-bundles}}
+
+{{> templates/close-document}}
+

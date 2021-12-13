@@ -1,0 +1,10 @@
+query getCategory($id: Int){
+    category(
+        id: $id
+    ) {
+        name
+        meta_title
+        meta_description
+        meta_keywords
+    }
+}

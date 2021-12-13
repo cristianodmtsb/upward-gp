@@ -1,0 +1,6 @@
+query getUrlType($url: String!) {
+    urlResolver(url: $url) {
+        type
+        id
+    }
+}

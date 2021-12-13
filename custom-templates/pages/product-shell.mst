@@ -1,0 +1,22 @@
+{{> custom-templates/default/open-document}}
+    <meta property="og:type" content="product" />
+    <meta name="robots" content="INDEX,FOLLOW"/>
+
+    {{#product}}
+
+    <meta property="og:title" content="{{ name }}" />
+    <meta property="og:image" content="{{ image.url }}" />
+    <meta property="og:description" content="{{{ short_description.html }}}" />
+    <meta property="og:url" content="{{ canonical_url }}" />
+
+    <meta property="product:price:amount" content="{{ price.minimalPrice.amount.value }}"/>
+    <meta property="product:price:currency" content="{{ price.minimalPrice.amount.currency }}"/>
+
+    {{/product}}
+
+{{> templates/open-body}}
+
+    {{> templates/default-initial-contents }}
+    {{> templates/seed-bundles}}
+
+{{> templates/close-document}}

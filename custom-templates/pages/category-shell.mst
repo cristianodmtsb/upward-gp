@@ -1,0 +1,19 @@
+{{> custom-templates/default/open-document}}
+    <meta property="og:type" content="category" />
+    
+    {{#category}}
+
+    <title>{{ name }}</title>
+    <meta name="title" content="{{ meta_title }}"/>
+    <meta name="description" content="{{ meta_description }}"/>
+    <meta name="keywords" content="{{ meta_keywords }}"/>
+    <meta name="robots" content="INDEX,FOLLOW"/>
+
+    {{/category}}
+
+{{> templates/open-body}}
+
+    {{> templates/default-initial-contents }}
+    {{> templates/seed-bundles}}
+
+{{> templates/close-document}}

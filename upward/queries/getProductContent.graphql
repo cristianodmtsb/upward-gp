@@ -1,0 +1,45 @@
+query getProductDetails($urlKey: String) {
+    products(
+        filter: {
+            url_key: {
+                eq: $urlKey
+            }
+        }
+    ) {
+        total_count
+        items {
+            id
+            name
+            url_key
+            url_path
+            canonical_url
+            short_description {
+                html
+            }
+            price {
+                minimalPrice {
+                    amount {
+                        currency
+                        value
+                    }
+                }
+                regularPrice {
+                    amount {
+                        currency
+                        value
+                    }
+                }
+            }
+            description {
+                html
+            }
+            image {
+                label
+                url
+            }
+            meta_description
+            meta_keyword
+            meta_title
+        }
+    }
+}
